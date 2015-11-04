@@ -1,14 +1,14 @@
 object MainForm: TMainForm
-  Left = 1024
-  Height = 590
-  Top = 159
+  Left = 1240
+  Height = 601
+  Top = 355
   Width = 793
   HorzScrollBar.Page = 222
   HorzScrollBar.Range = 222
   VertScrollBar.Page = 132
   VertScrollBar.Range = 132
   Caption = 'MainForm'
-  ClientHeight = 570
+  ClientHeight = 581
   ClientWidth = 793
   Color = clWhite
   Menu = MMenu
@@ -17,25 +17,15 @@ object MainForm: TMainForm
   LCLVersion = '1.4.2.0'
   object Panel: TPanel
     Left = 0
-    Height = 547
+    Height = 507
     Top = 0
     Width = 91
     Align = alLeft
-    ClientHeight = 547
+    ClientHeight = 507
     ClientWidth = 91
-    Color = clMedGray
+    Color = clSilver
     ParentColor = False
     TabOrder = 0
-    object SetColorBox: TColorBox
-      Left = 0
-      Height = 22
-      Top = 304
-      Width = 90
-      ItemHeight = 16
-      OnChange = SetColorBoxChange
-      ParentFont = False
-      TabOrder = 0
-    end
     object SetWidthBox: TComboBox
       Left = 0
       Height = 23
@@ -63,13 +53,13 @@ object MainForm: TMainForm
       OnChange = SetWidthBoxChange
       ParentFont = False
       Style = csDropDownList
-      TabOrder = 1
+      TabOrder = 0
       Text = '1'
     end
   end
   object ScrollBox: TScrollBox
     Left = 91
-    Height = 547
+    Height = 507
     Top = 0
     Width = 702
     HorzScrollBar.Page = 105
@@ -78,12 +68,12 @@ object MainForm: TMainForm
     VertScrollBar.Range = 105
     Align = alClient
     AutoScroll = False
-    ClientHeight = 543
+    ClientHeight = 503
     ClientWidth = 698
-    TabOrder = 1
+    TabOrder = 2
     object PaintBox: TPaintBox
       Left = 0
-      Height = 543
+      Height = 503
       Top = 0
       Width = 698
       Align = alClient
@@ -96,7 +86,7 @@ object MainForm: TMainForm
   object Stat1: TStatusBar
     Left = 0
     Height = 23
-    Top = 547
+    Top = 558
     Width = 793
     Panels = <    
       item
@@ -107,9 +97,70 @@ object MainForm: TMainForm
       end>
     SimplePanel = False
   end
+  object PalettePanel: TPanel
+    Left = 0
+    Height = 51
+    Top = 507
+    Width = 793
+    Align = alBottom
+    ClientHeight = 51
+    ClientWidth = 793
+    Color = clSilver
+    ParentColor = False
+    TabOrder = 1
+    object Panel1: TPanel
+      Left = 8
+      Height = 45
+      Top = 6
+      Width = 45
+      BevelInner = bvLowered
+      BevelOuter = bvLowered
+      ClientHeight = 45
+      ClientWidth = 45
+      TabOrder = 1
+      object PColorPanel: TPanel
+        Left = 4
+        Height = 24
+        Top = 18
+        Width = 24
+        Color = clBlack
+        ParentColor = False
+        TabOrder = 0
+        OnClick = PColorPanelClick
+        OnDblClick = PColorPanelClick
+      end
+      object FillColorPanel: TPanel
+        Left = 17
+        Height = 24
+        Top = 3
+        Width = 24
+        Color = clWhite
+        ParentColor = False
+        TabOrder = 1
+        OnClick = FillColorPanelClick
+        OnDblClick = FillColorPanelClick
+      end
+    end
+    object DrawGrid: TDrawGrid
+      Left = 64
+      Height = 36
+      Top = 15
+      Width = 260
+      ColCount = 16
+      DefaultColWidth = 16
+      DefaultRowHeight = 16
+      ExtendedSelect = False
+      FixedRows = 2
+      RowCount = 2
+      ScrollBars = ssNone
+      TabOrder = 0
+      OnDrawCell = DrawGridDrawCell
+      OnMouseDown = DrawGridMouseDown
+    end
+  end
   object MMenu: TMainMenu
-    left = 8
-    top = 504
+    left = 184
+    top = 296
     object Fail: TMenuItem
       Caption = 'Файл'
       object Save: TMenuItem
@@ -130,15 +181,69 @@ object MainForm: TMainForm
     end
   end
   object Dlg1: TSavePictureDialog
-    left = 8
-    top = 448
+    left = 184
+    top = 216
   end
   object SaveDialog1: TSaveDialog
     DefaultExt = '.png'
     FileName = 'zzz'
     Filter = '*.*|*.*'
     FilterIndex = 0
-    left = 48
-    top = 472
+    left = 144
+    top = 128
+  end
+  object PenColorDialog: TColorDialog
+    Color = clBlack
+    CustomColors.Strings = (
+      'ColorA=000000'
+      'ColorB=000080'
+      'ColorC=008000'
+      'ColorD=008080'
+      'ColorE=800000'
+      'ColorF=800080'
+      'ColorG=808000'
+      'ColorH=808080'
+      'ColorI=C0C0C0'
+      'ColorJ=0000FF'
+      'ColorK=00FF00'
+      'ColorL=00FFFF'
+      'ColorM=FF0000'
+      'ColorN=FF00FF'
+      'ColorO=FFFF00'
+      'ColorP=FFFFFF'
+      'ColorQ=C0DCC0'
+      'ColorR=F0CAA6'
+      'ColorS=F0FBFF'
+      'ColorT=A4A0A0'
+    )
+    left = 280
+    top = 232
+  end
+  object FillColorDialog: TColorDialog
+    Color = clBlack
+    CustomColors.Strings = (
+      'ColorA=000000'
+      'ColorB=000080'
+      'ColorC=008000'
+      'ColorD=008080'
+      'ColorE=800000'
+      'ColorF=800080'
+      'ColorG=808000'
+      'ColorH=808080'
+      'ColorI=C0C0C0'
+      'ColorJ=0000FF'
+      'ColorK=00FF00'
+      'ColorL=00FFFF'
+      'ColorM=FF0000'
+      'ColorN=FF00FF'
+      'ColorO=FFFF00'
+      'ColorP=FFFFFF'
+      'ColorQ=C0DCC0'
+      'ColorR=F0CAA6'
+      'ColorS=F0FBFF'
+      'ColorT=A4A0A0'
+    )
+    left = 288
+    top = 330
   end
 end
