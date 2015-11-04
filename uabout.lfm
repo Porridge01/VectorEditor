@@ -1,0 +1,33 @@
+object AboutForm: TAboutForm
+  Left = 1297
+  Height = 160
+  Top = 549
+  Width = 251
+  Caption = 'О программе'
+  ClientHeight = 0
+  ClientWidth = 0
+  Position = poScreenCenter
+  LCLVersion = '1.4.2.0'
+  object Memo1: TMemo
+    Left = 32
+    Height = 98
+    Top = 24
+    Width = 185
+    BorderStyle = bsNone
+    Color = clForm
+    Enabled = False
+    Font.CharSet = RUSSIAN_CHARSET
+    Font.Height = -19
+    Font.Name = 'Verdana'
+    Font.Pitch = fpVariable
+    Font.Quality = fqDraft
+    HideSelection = False
+    Lines.Strings = (
+      'Школа: ШЕН'
+      'Группа: Б8103а'
+      'Иванов Юрий'
+    )
+    ParentFont = False
+    TabOrder = 0
+  end
+end
