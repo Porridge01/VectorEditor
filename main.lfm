@@ -1,81 +1,93 @@
 object MainForm: TMainForm
-  Left = 1155
-  Height = 601
-  Top = 249
-  Width = 793
+  Left = 1128
+  Height = 411
+  Top = 420
+  Width = 615
   HorzScrollBar.Page = 222
   HorzScrollBar.Range = 222
   VertScrollBar.Page = 132
   VertScrollBar.Range = 132
   Caption = 'MainForm'
-  ClientHeight = 581
-  ClientWidth = 793
+  ClientHeight = 391
+  ClientWidth = 615
   Color = clWhite
   Menu = MMenu
   OnCreate = FormCreate
   Position = poScreenCenter
   LCLVersion = '1.4.2.0'
-  object Panel: TPanel
+  object ToolPanel: TPanel
     Left = 0
-    Height = 507
+    Height = 317
     Top = 0
     Width = 91
     Align = alLeft
-    ClientHeight = 507
+    ClientHeight = 317
     ClientWidth = 91
     Color = clSilver
     ParentColor = False
     TabOrder = 0
-    object SetWidthBox: TComboBox
+    object Panel2: TPanel
       Left = 0
       Height = 23
-      Top = 336
+      Top = 208
       Width = 90
-      ItemHeight = 15
-      ItemIndex = 0
-      Items.Strings = (
-        '1'
-        '2'
-        '3'
-        '4'
-        '5'
-        '6'
-        '7'
-        '8'
-        '9'
-        '10'
-        '11'
-        '12'
-        '13'
-        '14'
-        '15'
-      )
-      OnChange = SetWidthBoxChange
-      ParentFont = False
-      Style = csDropDownList
+      BevelOuter = bvLowered
+      ClientHeight = 23
+      ClientWidth = 90
       TabOrder = 0
-      Text = '1'
+      object SetWidthBox: TComboBox
+        Left = 1
+        Height = 23
+        Top = 1
+        Width = 88
+        Align = alClient
+        Anchors = []
+        ItemHeight = 15
+        ItemIndex = 0
+        Items.Strings = (
+          '1'
+          '2'
+          '3'
+          '4'
+          '5'
+          '6'
+          '7'
+          '8'
+          '9'
+          '10'
+          '11'
+          '12'
+          '13'
+          '14'
+          '15'
+        )
+        OnChange = SetWidthBoxChange
+        ParentFont = False
+        Style = csDropDownList
+        TabOrder = 0
+        Text = '1'
+      end
     end
   end
   object ScrollBox: TScrollBox
     Left = 91
-    Height = 507
+    Height = 317
     Top = 0
-    Width = 702
+    Width = 524
     HorzScrollBar.Page = 105
     HorzScrollBar.Range = 105
     VertScrollBar.Page = 105
     VertScrollBar.Range = 105
     Align = alClient
     AutoScroll = False
-    ClientHeight = 503
-    ClientWidth = 698
+    ClientHeight = 313
+    ClientWidth = 520
     TabOrder = 2
     object PaintBox: TPaintBox
       Left = 0
-      Height = 503
+      Height = 313
       Top = 0
-      Width = 698
+      Width = 520
       Align = alClient
       OnMouseDown = PaintBoxMouseDown
       OnMouseMove = PaintBoxMouseMove
@@ -86,8 +98,8 @@ object MainForm: TMainForm
   object Stat1: TStatusBar
     Left = 0
     Height = 23
-    Top = 558
-    Width = 793
+    Top = 368
+    Width = 615
     Panels = <    
       item
         Width = 560
@@ -100,11 +112,11 @@ object MainForm: TMainForm
   object PalettePanel: TPanel
     Left = 0
     Height = 51
-    Top = 507
-    Width = 793
+    Top = 317
+    Width = 615
     Align = alBottom
     ClientHeight = 51
-    ClientWidth = 793
+    ClientWidth = 615
     Color = clSilver
     ParentColor = False
     TabOrder = 1
@@ -127,7 +139,6 @@ object MainForm: TMainForm
         ParentColor = False
         TabOrder = 0
         OnClick = PColorPanelClick
-        OnDblClick = PColorPanelClick
       end
       object FillColorPanel: TPanel
         Left = 17
@@ -138,7 +149,6 @@ object MainForm: TMainForm
         ParentColor = False
         TabOrder = 1
         OnClick = FillColorPanelClick
-        OnDblClick = FillColorPanelClick
       end
     end
     object DrawGrid: TDrawGrid
@@ -159,8 +169,8 @@ object MainForm: TMainForm
     end
   end
   object MMenu: TMainMenu
-    left = 184
-    top = 296
+    left = 224
+    top = 176
     object Fail: TMenuItem
       Caption = 'Файл'
       object Save: TMenuItem
@@ -180,7 +190,7 @@ object MainForm: TMainForm
       end
     end
   end
-  object Dlg1: TSavePictureDialog
+  object SavePicture: TSavePictureDialog
     left = 184
     top = 216
   end
@@ -243,7 +253,7 @@ object MainForm: TMainForm
       'ColorS=F0FBFF'
       'ColorT=A4A0A0'
     )
-    left = 288
-    top = 330
+    left = 352
+    top = 216
   end
 end

@@ -11,8 +11,8 @@ uses
 Type
   TTool = Class(TObject)
     public
-      YColor: TColor; static;
-      YWidth: Integer; static;
+      FColor: TColor; static;
+      FWidth: Integer; static;
       Tools: array of TTool; static;
       SetImgBtn: TBitMap;
       constructor Create(PathToFile: String); overload;
@@ -99,8 +99,13 @@ Type
        override;
   end;
 
+var
+  MousePressed: boolean;
 
 implementation
+
+var
+  Processing: boolean;
 
 constructor TTool.Create(PathToFile: string);
 begin
@@ -116,23 +121,22 @@ end;
 
 class procedure TTool.SetColor(Color: TColor);
 begin
-  YColor:= Color;
+  FColor:= Color;
 end;
 
 class procedure TTool.SetWidth(Width: Integer);
 begin
-  YWidth:= Width;
+  FWidth:= Width;
 end;
 
 
 procedure TTPen.onMouseDown(Shift: TShiftState; X, Y: Integer);
 begin
-     TFigure.addFigure(Tpen.Create(YColor, YWidth));
+     TFigure.addFigure(Tpen.Create(FColor, FWidth));
 end;
 
 procedure TTPen.onMouseMove(Shift: TShiftState; X, Y: Integer);
 begin
-    if not (ssLeft in Shift) and not(ssRight in Shift)  then Exit;
     (TFigure.RecentFigure() as Tpen).addPoint(point(X,Y));
 end;
 
@@ -144,12 +148,11 @@ end;
 
 procedure TTErase.onMouseDown(Shift: TShiftState; X, Y: Integer);
 begin
-     TFigure.addFigure(TErase.Create(YColor, YWidth));
+     TFigure.addFigure(TErase.Create(FColor, FWidth));
 end;
 
 procedure TTErase.onMouseMove(Shift: TShiftState; X, Y: Integer);
 begin
-    if not (ssLeft in Shift) and not(ssRight in Shift)  then Exit;
     (TFigure.RecentFigure() as TErase).addPoint(point(X,Y));
 end;
 
@@ -161,13 +164,13 @@ end;
 
 procedure TTLine.onMouseDown(Shift: TShiftState; X, Y: Integer);
 begin
-    TFigure.addFigure(TLine.Create(YColor, YWidth));
+    TFigure.addFigure(TLine.Create(FColor, FWidth));
     (TFigure.RecentFigure() as Tline).TopLeft:=point(X,Y);
+    (TFigure.RecentFigure() as Tline).BottomRight:=point(X,Y);
 end;
 
 procedure TTLine.onMouseMove(Shift: TShiftState; X, Y: Integer);
 begin
-    if not (ssLeft in Shift) and not(ssRight in Shift)  then Exit;
     (TFigure.RecentFigure() as TLine).BottomRight:=point(X,Y);
 end;
 
@@ -181,17 +184,18 @@ procedure TTPolyline.onMouseDown(Shift: TShiftState; X, Y: Integer);
 begin
   if (ssRight in Shift) then begin
      (Tfigure.RecentFigure() as TPolyline).RecentLine().BottomRight:=point(X,Y);
-     ClickMemory:=False;
+     Processing:=False;
      Exit;
   end;
 
-  if ClickMemory then
+  if Processing then
     (Tfigure.RecentFigure() as TPolyline).RecentLine().BottomRight:=point(X,Y)
   else
-    ClickMemory:=True;
-    TFigure.AddFigure(TPolyline.Create(YColor, YWidth));
+    Processing:=True;
+    TFigure.AddFigure(TPolyline.Create(FColor, FWidth));
     (TFIgure.RecentFigure() as TPolyline).addLine;
     (Tfigure.RecentFigure() as TPolyline).RecentLine().TopLeft:=point(X,Y);
+    (Tfigure.RecentFigure() as TPolyline).RecentLine().BottomRight:=point(X,Y);
   end;
 
 procedure TTPolyline.onMouseMove(Shift: TShiftState; X, Y: Integer);
@@ -201,20 +205,19 @@ end;
 
 procedure TTPolyline.onMouseUp(Shift: TShiftState; X, Y: Integer);
 begin
-
-
+  if Processing then MousePressed:=True;
 end;
 
 
 procedure TTRectangle.onMouseDown(Shift: TShiftState; X, Y: Integer);
 begin
-     TFigure.addFigure(TRectangle.Create(YColor, YWidth));
+     TFigure.addFigure(TRectangle.Create(FColor, FWidth));
     (TFigure.RecentFigure() as TRectangle).TopLeft:=point(X,Y);
+    (TFigure.RecentFigure() as TRectangle).BottomRight:=point(X,Y);
 end;
 
 procedure TTRectangle.onMouseMove(Shift: TShiftState; X, Y: Integer);
 begin
-    if not (ssLeft in Shift) and not(ssRight in Shift)  then Exit;
     (TFigure.RecentFigure() as TRectangle).BottomRight:=point(X,Y);
 end;
 
@@ -226,13 +229,13 @@ end;
 
 procedure TTRoundRectangle.onMouseDown(Shift: TShiftState; X, Y: Integer);
 begin
-     TFigure.addFigure(TRoundRectangle.Create(YColor, YWidth));
+     TFigure.addFigure(TRoundRectangle.Create(FColor, FWidth));
     (TFigure.RecentFigure() as TRoundRectangle).TopLeft:=point(X,Y);
+    (TFigure.RecentFigure() as TRoundRectangle).BottomRight:=point(X,Y);
 end;
 
 procedure TTRoundRectangle.onMouseMove(Shift: TShiftState; X, Y: Integer);
 begin
-    if not (ssLeft in Shift) and not(ssRight in Shift)  then Exit;
     (TFigure.RecentFigure() as TRoundRectangle).BottomRight:=point(X,Y);
 end;
 
@@ -244,13 +247,13 @@ end;
 
 procedure TTEllipse.onMouseDown(Shift: TShiftState; X, Y: Integer);
 begin
-     TFigure.addFigure(TEllipse.Create(YColor, YWidth));
+     TFigure.addFigure(TEllipse.Create(FColor, FWidth));
     (TFigure.RecentFigure() as TEllipse).TopLeft:=point(X,Y);
+    (TFigure.RecentFigure() as TEllipse).BottomRight:=point(X,Y);
 end;
 
 procedure TTEllipse.onMouseMove(Shift: TShiftState; X, Y: Integer);
 begin
-    if not (ssLeft in Shift) and not(ssRight in Shift)  then Exit;
     (TFigure.RecentFigure() as TEllipse).BottomRight:=point(X,Y);
 end;
 

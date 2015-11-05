@@ -6,13 +6,26 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, ExtCtrls,
-  StdCtrls, Menus, Buttons;
+  StdCtrls, Menus, Buttons, Interfaces;
 Type
+  {PFloatPoint = ^TFloatPoint;
+  TFloatPoint = record
+    X,Y: double;
+  end;
+
+  ICoordConvert = Interface
+  ['{2FACBF76-4176-4037-8AE9-3A0F45643521}']
+    procedure LogToScreen(lX, lY: integer; var sX, sY: double);  overload;
+    procedure ScreenToLog(sX, sY: double; var lX, lY: integer); overload;
+    function LogToScreen(Value: double): integer; overload;
+    function ScreenToLog(Value: integer): double; overload;
+  end; }
+
   TFigure = Class(TObject)
     private
-      YFigures: array of TFigure; static;
-      YColor: TColor;
-      YWidth: integer;
+      FFigures: array of TFigure; static;
+      FColor: TColor;
+      FWidth: integer;
     public
       constructor Create(SetColor: TColor; SetWidth: integer);
       class procedure addFigure(figure: TFigure); static;
@@ -22,7 +35,7 @@ Type
 
   TPen = Class(TFigure)
     private
-      YPoints: array of TPoint;
+      FPoints: array of TPoint;
     public
       procedure addPoint(point: TPoint);
       procedure Draw(Canvas: TCanvas); override;
@@ -30,7 +43,7 @@ Type
 
   TErase = Class(TFigure)
     private
-      YPoints: array of TPoint;
+      FPoints: array of TPoint;
     public
       procedure addPoint(point: TPoint);
       procedure Draw(Canvas: TCanvas); override;
@@ -44,7 +57,7 @@ Type
 
   TPolyline = Class(TFigure)
     private
-      YLines: array of TLine;
+      FLines: array of TLine;
     public
       procedure AddLine();
       function RecentLine(): TLine;
@@ -73,43 +86,43 @@ implementation
 
 constructor TFigure.Create(SetColor: TColor; SetWidth: Integer);
 begin
-  YColor:= SetColor;
-  YWidth:= SetWidth;
+  FColor:= SetColor;
+  FWidth:= SetWidth;
 end;
 
 class procedure TFigure.addFigure(figure: TFigure);
 begin
-  SetLength(TFigure.YFigures, Length(Tfigure.Yfigures)+1);
-  TFigure.YFigures[High(TFigure.YFigures)]:= figure;
+  SetLength(TFigure.FFigures, Length(Tfigure.FFigures)+1);
+  TFigure.FFigures[High(TFigure.FFigures)]:= figure;
 end;
 
 class function TFigure.RecentFigure(): TFigure;
 begin
-  result:=YFigures[High(YFigures)];
+  result:=FFigures[High(FFigures)];
 end;
 
 procedure TPen.addPoint(point: TPoint);
 begin
-  SetLength(YPoints, Length(YPoints) + 1);
-  YPoints[High(YPoints)]:= point;
+  SetLength(FPoints, Length(FPoints) + 1);
+  FPoints[High(FPoints)]:= point;
 end;
 
 procedure TPen.Draw(Canvas: TCanvas);
-var Point: TPOint;
+var Point: TPoint;
 begin
   with Canvas do begin
-    Pen.Color:=YColor;
-    Pen.Width:=YWidth;
-    MoveTO(YPoints[0]);
-    for point in YPoints do
-        lineTo(point);
+    Pen.Color:=FColor;
+    Pen.Width:=FWidth;
+    MoveTO(FPoints[0]);
+    for point in FPoints do
+      LineTo(point);
   end;
 end;
 
 procedure TErase.addPoint(point: TPoint);
 begin
-  SetLength(YPoints, Length(YPoints) + 1);
-  YPoints[High(YPoints)]:= point;
+  SetLength(FPoints, Length(FPoints) + 1);
+  FPoints[High(FPoints)]:= point;
 end;
 
 procedure TErase.Draw(Canvas: TCanvas);
@@ -118,52 +131,47 @@ begin
   with Canvas do begin
     Pen.Color:=clWhite;
     Pen.Width:=15;
-    MoveTO(YPoints[0]);
-    for point in YPoints do
-        lineTo(point);
-    //Pen.Color:=clBlack;
-    //Pen.Width:=1;
+    MoveTO(FPoints[0]);
+    for point in FPoints do
+      LineTo(point);
   end;
 end;
 
 procedure TLine.Draw(Canvas: TCanvas);
 begin
   with Canvas do begin
-    Pen.Color:=YColor;
-    Pen.Width:=YWidth;
+    Pen.Color:=FColor;
+    Pen.Width:=FWidth;
     MoveTO(TopLeft);
     LineTo(BottomRight);
   end;
 end;
 
 procedure TPolyline.Draw(Canvas: TCanvas);
-var YLine: Tline;
+var FLine: Tline;
 begin
-  Canvas.Pen.Color:=YColor;
-  CAnvas.Pen.Width:=YWidth;
-  for Yline in YLines do
-      with Canvas do begin
-        MoveTo(Yline.TopLeft);
-        LineTo(Yline.BottomRight);
-      end;
+  Canvas.Pen.Color:=FColor;
+  CAnvas.Pen.Width:=FWidth;
+  for FLine in FLines do
+    Fline.Draw(Canvas);
 end;
 
 procedure TPolyline.AddLine();
 begin
-  SetLength(YLines, Length(YLines) + 1);
-  YLines[High(YLines)]:= TLine.Create(YColor, YWidth);
+  SetLength(FLines, Length(FLines) + 1);
+  FLines[High(FLines)]:= TLine.Create(FColor, FWidth);
 end;
 
 function TPolyline.RecentLine(): Tline;
 begin
-  result:=YLines[High(YLines)];
+  result:=FLines[High(FLines)];
 end;
 
 procedure TRectangle.Draw(Canvas: TCanvas);
 begin
   with Canvas do begin
-    Pen.Color:=YColor;
-    Pen.Width:=YWidth;
+    Pen.Color:=FColor;
+    Pen.Width:=FWidth;
     Brush.Style:=bsClear;
     Rectangle(TopLeft.X, TopLeft.y, BottomRight.X, BottomRight.Y);
   end;
@@ -172,8 +180,8 @@ end;
 procedure TRoundRectangle.Draw(Canvas: TCanvas);
 begin
   with Canvas do begin
-    Pen.Color:=YColor;
-    Pen.Width:=YWidth;
+    Pen.Color:=FColor;
+    Pen.Width:=FWidth;
     Brush.Style:=bsClear;
     RoundRect(TopLeft.X, TopLeft.y, BottomRight.X, BottomRight.Y, 20, 20);
   end;
@@ -182,8 +190,8 @@ end;
 procedure TEllipse.Draw(Canvas: TCanvas);
 begin
   with Canvas do begin
-    Pen.Color:=YColor;
-    Pen.Width:=YWidth;
+    Pen.Color:=FColor;
+    Pen.Width:=FWidth;
     Brush.Style:=bsClear;
     Ellipse(TopLeft.X, TopLeft.y, BottomRight.X, BottomRight.Y);
   end;

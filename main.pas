@@ -15,6 +15,7 @@ type
 
   TMainForm = class(TForm)
     FillColorDialog: TColorDialog;
+    Panel2: TPanel;
     PenColorDialog: TColorDialog;
     DrawGrid: TDrawGrid;
     PalettePanel: TPanel;
@@ -26,12 +27,12 @@ type
     MMenu: TMainMenu;
     Fail: TMenuItem;
     Help: TMenuItem;
-    Dlg1: TSavePictureDialog;
+    SavePicture: TSavePictureDialog;
     SaveDialog1: TSaveDialog;
     YExit: TMenuItem;
     About: TMenuItem;
     PaintBox: TPaintBox;
-    Panel: TPanel;
+    ToolPanel: TPanel;
     ScrollBox: TScrollBox;
     Stat1: TStatusBar;
     procedure AboutClick(Sender: TObject);
@@ -66,7 +67,7 @@ var
   SetBtn: TBitBtn;
 
 const
-  ArColors: array[0..12,0..1] of TColor = ((clWhite, clSilver), (clBlack, clMaroon),
+  ArrayOfColors: array[0..12,0..1] of TColor = ((clWhite, clSilver), (clBlack, clMaroon),
   (clGreen, clOlive), (clNavy, clPurple), (clTeal, clRed), (clLime, clYellow),
   (clBlue, clFuchsia), (clAqua, clGray), (clSkyBlue,clMedGray),
   (clCream,clMoneyGreen), (clLtGray, clHotLight), (clWindowText, clHighlight),
@@ -104,7 +105,7 @@ end;
 procedure TMainForm.PaintBoxMouseDown(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
 begin
-  if (ssLeft in Shift) and (ssRight in Shift) then Exit;
+  MousePressed:=True;
   SetColor(Shift);
   TTool.Tools[IndexOfBtn].OnMouseDown(Shift, X,Y);
 end;
@@ -113,8 +114,8 @@ procedure TMainForm.PaintBoxMouseMove(Sender: TObject; Shift: TShiftState; X,
   Y: Integer);
 begin
   stat1.Panels[1].text := 'x:'+inttostr(x)+ '  y:'+inttostr(y);
-  if (ssLeft in Shift) or (ssRight in Shift) then begin
-  TTool.Tools[IndexOfBtn].OnMouseMove(Shift, X,Y);
+  if MousePressed then begin
+    TTool.Tools[IndexOfBtn].OnMouseMove(Shift, X,Y);
   Invalidate;
   end;
 end;
@@ -122,7 +123,7 @@ end;
 procedure TMainForm.PaintBoxMouseUp(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
 begin
-  if (ssLeft in Shift) and (ssRight in Shift) then Exit;
+  MousePressed:=False;
   TTool.Tools[IndexOfBtn].OnMouseUp(Shift, X,Y);
 end;
 
@@ -135,7 +136,7 @@ procedure TMainForm.DrawGridDrawCell(Sender: TObject; aCol, aRow: Integer;
   aRect: TRect; aState: TGridDrawState);
 begin
   with DrawGrid.Canvas do begin
-    Brush.Color:= ArColors[aCol,aRow];
+    Brush.Color:= ArrayOfColors[aCol,aRow];
     FillRect(aRect);
   end;
 end;
@@ -148,15 +149,15 @@ begin
   DrawGrid.MouseToCell(X, Y, Col, Row);
   if Shift = [ssLeft] then
     begin
-      PaintBox.Canvas.Pen.Color := ArColors[Col, Row];
-      PColorPanel.Color := ArColors[Col, Row];
-      PenColorDialog.Color := ArColors[Col, Row];
+      PaintBox.Canvas.Pen.Color := ArrayOfColors[Col, Row];
+      PColorPanel.Color := ArrayOfColors[Col, Row];
+      PenColorDialog.Color := ArrayOfColors[Col, Row];
     end;
-    if (Shift = [ssRight]) then
+    if Shift = [ssRight] then
     begin
-      PaintBox.Canvas.Brush.Color := ArColors[Col, Row];
-      FillColorPanel.Color := ArColors[Col, Row];
-      FillColorDialog.Color := ArColors[Col, Row];
+      PaintBox.Canvas.Brush.Color := ArrayOfColors[Col, Row];
+      FillColorPanel.Color := ArrayOfColors[Col, Row];
+      FillColorDialog.Color := ArrayOfColors[Col, Row];
     end;
 end;
 
@@ -170,7 +171,7 @@ end;
 procedure TMainForm.PaintBoxPaint(Sender: TObject);
 var figure: TFigure;
 begin
-  for figure in TFigure.YFigures do
+  for figure in TFigure.FFigures do
       figure.Draw(PaintBox.Canvas);
 end;
 
@@ -185,7 +186,7 @@ procedure TMainForm.SaveClick(Sender: TObject);
 var bmp1: TBitmap;
     Dest, Source: TRect;
 begin
-  Dlg1.Execute;
+  SavePicture.Execute;
   bmp1 := TBitmap.Create;
   try
     with bmp1 do
@@ -197,7 +198,7 @@ begin
     with PaintBox do
       Source := Rect(0, 0, Width, Height);
       bmp1.Canvas.CopyRect(Dest, PaintBox.Canvas, Source);
-      bmp1.SaveToFile(Dlg1.FileName);
+      bmp1.SaveToFile(SavePicture.FileName);
   finally
     bmp1.Free;
   end;
