@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, ExtCtrls,
-  ComCtrls, Buttons, Menus, ExtDlgs, ColorBox, StdCtrls, Grids, UTools,
+  ComCtrls, Buttons, Menus, ExtDlgs, StdCtrls, Grids, UTools,
   UFigures, UAbout;
 
 type
@@ -66,9 +66,11 @@ var
   SetBtn: TBitBtn;
 
 const
-  ArColors: array[0..15] of TColor = (clWhite, clBlack, clMaroon, clGreen,
-    clOlive, clNavy, clPurple, clTeal, clRed, clLime, clYellow, clBlue,
-    clFuchsia, clAqua, clGray, clSilver);
+  ArColors: array[0..12,0..1] of TColor = ((clWhite, clSilver), (clBlack, clMaroon),
+  (clGreen, clOlive), (clNavy, clPurple), (clTeal, clRed), (clLime, clYellow),
+  (clBlue, clFuchsia), (clAqua, clGray), (clSkyBlue,clMedGray),
+  (clCream,clMoneyGreen), (clLtGray, clHotLight), (clWindowText, clHighlight),
+  (clWindowFrame, clActiveCaption));
 
 implementation
 
@@ -113,7 +115,7 @@ begin
   stat1.Panels[1].text := 'x:'+inttostr(x)+ '  y:'+inttostr(y);
   if (ssLeft in Shift) or (ssRight in Shift) then begin
   TTool.Tools[IndexOfBtn].OnMouseMove(Shift, X,Y);
-  PaintBox.Invalidate;
+  Invalidate;
   end;
 end;
 
@@ -133,7 +135,7 @@ procedure TMainForm.DrawGridDrawCell(Sender: TObject; aCol, aRow: Integer;
   aRect: TRect; aState: TGridDrawState);
 begin
   with DrawGrid.Canvas do begin
-    Brush.Color:= ArColors[aCol * 2 + aRow];
+    Brush.Color:= ArColors[aCol,aRow];
     FillRect(aRect);
   end;
 end;
@@ -146,15 +148,15 @@ begin
   DrawGrid.MouseToCell(X, Y, Col, Row);
   if Shift = [ssLeft] then
     begin
-      PaintBox.Canvas.Pen.Color := ArColors[Col * 2 + Row];
-      PColorPanel.Color := ArColors[Col * 2 + Row];
-      PenColorDialog.Color := ArColors[Col * 2 + Row];
+      PaintBox.Canvas.Pen.Color := ArColors[Col, Row];
+      PColorPanel.Color := ArColors[Col, Row];
+      PenColorDialog.Color := ArColors[Col, Row];
     end;
     if (Shift = [ssRight]) then
     begin
-      PaintBox.Canvas.Brush.Color := ArColors[Col * 2 + Row];
-      FillColorPanel.Color := ArColors[Col * 2 + Row];
-      FillColorDialog.Color := ArColors[Col * 2 + Row];
+      PaintBox.Canvas.Brush.Color := ArColors[Col, Row];
+      FillColorPanel.Color := ArColors[Col, Row];
+      FillColorDialog.Color := ArColors[Col, Row];
     end;
 end;
 
